@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <title>Mini Shop</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- HTML: header hiển thị tên shop và badge số lượng món trong giỏ -->
+  <header><h1>My Shop <span id="badge">0</span></h1></header>
+
+  <!-- HTML: vùng render danh sách sản phẩm động -->
+  <main>
+    <section id="products"></section>
+
+    <!-- HTML: khung giỏ hàng chứa danh sách mục và tổng tiền, ẩn khi rỗng -->
+    <section id="cart" class="card" hidden>
+      <h3>Cart</h3>
+      <div id="items"></div>
+      <div class="total">Total: $<span id="total">0.00</span></div>
+    </section>
+  </main>
+
+<script>
+/* JS: mảng dữ liệu sản phẩm mẫu dùng để render động */
+const products = [
+  {id:1,name:'Laptop',price:999.99,icon:'💻'},
+  {id:2,name:'Phone',price:699.99,icon:'📱'},
+  {id:3,name:'Headset',price:199.99,icon:'🎧'},
+  {id:4,name:'Watch',price:299.99,icon:'⌚'}
+];
+
+/* JS: mảng lưu trạng thái giỏ hàng (mỗi item lưu id và quantity) */
+let cart = [];
+
+/* JS: chọn các phần tử DOM để cập nhật giao diện (products, items, badge, cart, total) */
+const productsEl = document.getElementById('products'),
+      itemsEl = document.getElementById('items'),
+      badge = document.getElementById('badge'),
+      cartEl = document.getElementById('cart'),
+      totalEl = document.getElementById('total');
+
+/* JS: render danh sách sản phẩm ra DOM và gán sự kiện nút Add cho từng sản phẩm */
+function renderProducts(){
+  productsEl.innerHTML = products.map(p => `
+    <div class="prod">
+      <div class="icon">${p.icon}</div>
+      <div>${p.name}</div>
+      <div class="price">$${p.price.toFixed(2)}</div>
+      <button onclick="add(${p.id})">Add</button>
+    </div>
+  `).join('');
+}
+
+/* JS: thêm sản phẩm vào cart hoặc tăng quantity nếu đã tồn tại */
+function add(id){
+  const it = cart.find(x=>x.id===id);
+  if(it) it.q++;
+  else cart.push({id, q:1});
+  renderCart();
+}
+
+/* JS: remove xóa mục khỏi cart theo id */
+function remove(id){
+  cart = cart.filter(x=>x.id!==id);
+  renderCart();
+}
+
+/* JS: change thay đổi số lượng (tăng/giảm) và xóa khi qty <= 0 */
+function change(id, delta){
+  const it = cart.find(x=>x.id===id);
+  if(!it) return;
+  it.q += delta;
+  if(it.q<=0) remove(id);
+  renderCart();
+}
+
+/* JS: renderCart hiển thị các mục trong cart, tính tổng và cập nhật badge; ẩn giỏ khi rỗng */
+function renderCart(){
+  if(cart.length===0){ cartEl.hidden=true; badge.textContent='0'; totalEl.textContent='0.00'; itemsEl.innerHTML=''; return; }
+  cartEl.hidden=false;
+  badge.textContent = cart.reduce((s,i)=>s+i.q,0);
+  itemsEl.innerHTML = cart.map(ci=>{
+    const p = products.find(x=>x.id===ci.id);
+    return `
+      <div class="item">
+        <div>${p.icon} ${p.name}</div>
+        <div>$${(p.price*ci.q).toFixed(2)}</div>
+        <div class="ctrl">
+          <button onclick="change(${ci.id},-1)">-</button>
+          <span>${ci.q}</span>
+          <button onclick="change(${ci.id},1)">+</button>
+          <button onclick="remove(${ci.id})">Remove</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+  totalEl.textContent = cart.reduce((s,ci)=>{
+    const p = products.find(x=>x.id===ci.id); return s + p.price*ci.q;
+  },0).toFixed(2);
+}
+
+/* JS: khởi tạo hiển thị sản phẩm khi trang load */
+renderProducts();
+</script>
+</body>
+</html>

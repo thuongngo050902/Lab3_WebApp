@@ -1,0 +1,28 @@
+/* CSS: base layout và font */
+body{font-family:Arial, sans-serif;background:#f6f7fb;padding:18px}
+header h1{display:flex;gap:10px;align-items:center}
+
+/* CSS: badge số lượng trên header */
+#badge{background:#e53935;color:#fff;padding:4px 8px;border-radius:999px;font-size:14px;margin-left:8px}
+
+/* CSS: bố cục chính 2 cột (products + cart) */
+main{display:grid;grid-template-columns:1fr 320px;gap:16px;max-width:1000px;margin:18px auto}
+
+/* CSS: lưới sản phẩm 2 cột */
+#products{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+
+/* CSS: thẻ sản phẩm */
+.prod{background:#fff;padding:10px;border-radius:8px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.05)}
+.icon{font-size:48px}
+.price{color:#2e7d32;font-weight:700;margin:8px 0}
+button{padding:6px 8px;border-radius:6px;border:none;background:#1976d2;color:#fff;cursor:pointer}
+
+/* CSS: khung giỏ hàng và item */
+.card{background:#fff;padding:12px;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,.05)}
+.item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee}
+.item .ctrl{display:flex;align-items:center;gap:6px}
+.item button{background:#eee;color:#111;padding:4px 6px}
+.total{margin-top:8px;font-weight:800;text-align:right}
+
+/* CSS: responsive nhỏ */
+@media(max-width:800px){ main{grid-template-columns:1fr; } #products{grid-template-columns:repeat(2,1fr)} }

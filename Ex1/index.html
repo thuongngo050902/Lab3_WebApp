@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <title>Form Validator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- HTML: chứa cấu trúc form với input username, email, password, confirm và nút submit -->
+  <div class="box">
+    <h2>Sign Up</h2>
+    <form id="f" novalidate>
+      <!-- HTML: input username và vùng hiển thị lỗi phía dưới -->
+      <label>Username<input id="u" /></label>
+      <div class="err" id="uerr"></div>
+
+      <!-- HTML: input email và vùng hiển thị lỗi phía dưới -->
+      <label>Email<input id="e" type="email" /></label>
+      <div class="err" id="eerr"></div>
+
+      <!-- HTML: input password và vùng hiển thị lỗi phía dưới -->
+      <label>Password<input id="p" type="password" /></label>
+      <div class="err" id="perr"></div>
+
+      <!-- HTML: input confirm password và vùng hiển thị lỗi phía dưới -->
+      <label>Confirm<input id="c" type="password" /></label>
+      <div class="err" id="cerr"></div>
+
+      <!-- HTML: nút submit, mặc định disabled cho tới khi hợp lệ -->
+      <button id="s" disabled>Sign Up</button>
+    </form>
+
+    <!-- HTML: thông báo thành công sau khi submit hợp lệ -->
+    <div id="ok" class="ok" hidden>Đăng ký thành công!</div>
+  </div>
+
+<script>
+/* JS: chọn các phần tử DOM quan trọng để thao tác (inputs, button, vùng lỗi, thông báo) */
+const u = document.getElementById('u'),
+      e = document.getElementById('e'),
+      p = document.getElementById('p'),
+      c = document.getElementById('c'),
+      s = document.getElementById('s'),
+      uerr = document.getElementById('uerr'),
+      eerr = document.getElementById('eerr'),
+      perr = document.getElementById('perr'),
+      cerr = document.getElementById('cerr'),
+      ok = document.getElementById('ok');
+
+/* JS: định nghĩa regex kiểm tra username, email và độ phức tạp mật khẩu */
+const reUser = /^[A-Za-z0-9_]{4,20}$/,
+      reEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      rePass = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+/* JS: hàm tiện ích để hiển/ẩn thông báo lỗi cho một trường input dựa vào chuỗi msg */
+function setErr(elMsg, msg){
+  elMsg.textContent = msg || '';
+  elMsg.style.display = msg ? 'block' : 'none';
+}
+
+/* JS: hàm validate kiểm tra mọi trường, cập nhật lỗi và bật/tắt nút submit */
+function validate(){
+  const vu = reUser.test(u.value.trim());
+  const ve = reEmail.test(e.value.trim());
+  const vp = rePass.test(p.value);
+  const vm = p.value && p.value === c.value;
+
+  setErr(uerr, u.value && !vu ? '4-20 chars, letters/numbers/_ only' : '');
+  setErr(eerr, e.value && !ve ? 'Email không hợp lệ' : '');
+  setErr(perr, p.value && !vp ? '≥8, 1 uppercase, 1 number' : '');
+  setErr(cerr, c.value && !vm ? 'Không khớp mật khẩu' : '');
+
+  s.disabled = !(vu && ve && vp && vm);
+}
+
+/* JS: lắng nghe input để chạy validate theo thời gian thực khi người dùng gõ */
+[u,e,p,c].forEach(i => i.addEventListener('input', validate));
+
+/* JS: chặn submit mặc định, hiển thị thông báo thành công và reset form khi hợp lệ */
+document.getElementById('f').addEventListener('submit', (ev)=>{
+  ev.preventDefault();
+  if (!s.disabled){
+    ok.hidden = false;
+    setTimeout(()=>{
+      ok.hidden = true;
+      ev.target.reset();
+      validate();
+    },1200);
+  }
+});
+</script>
+</body>
+</html>

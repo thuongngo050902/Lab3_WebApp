@@ -1,0 +1,21 @@
+/* CSS: base và layout cho form */
+body{font-family:Arial, sans-serif;background:#f4f6f8;padding:30px}
+.box{max-width:360px;margin:0 auto;background:#fff;padding:18px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+
+/* CSS: style cho label và input để người dùng dễ nhìn */
+label{display:block;font-weight:600;margin-top:10px}
+input{width:100%;padding:8px;margin-top:6px;border:2px solid #ddd;border-radius:6px;outline:none}
+input:focus{border-color:#6aa0ff}
+
+/* CSS: style cho vùng hiển thị lỗi, ẩn khi không có lỗi */
+.err{color:#c62828;font-size:12px;display:none;margin-top:6px}
+
+/* CSS: style cho nút submit, trạng thái disabled rõ ràng */
+button{margin-top:14px;padding:10px;width:100%;border:none;border-radius:6px;background:#1976d2;color:#fff;cursor:pointer}
+button:disabled{background:#bbb;cursor:not-allowed}
+
+/* CSS: thông báo thành công */
+.ok{margin-top:10px;padding:8px;background:#e6ffed;color:#116530;border-radius:6px}
+
+/* CSS: responsive cơ bản */
+@media(max-width:420px){ .box{margin:10px} }
